@@ -1,13 +1,14 @@
 package com.example.mall.service;
 
 import com.example.mall.pojo.User;
+import com.example.mall.vo.ResponseVo;
 
 public interface IUserService {
 
     /**
      * 注册
      */
-    void register(User user);
+    ResponseVo register(User user);
 
     /**
      * 登录
