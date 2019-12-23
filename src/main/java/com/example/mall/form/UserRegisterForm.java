@@ -7,7 +7,7 @@ import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 
 @Data
-public class UserForm {
+public class UserRegisterForm {
 
     // @NotBlank 用于 String 判断空格
     // @NotEmpty 用于集合

@@ -6,7 +6,6 @@ import com.example.mall.enums.RoleEnum;
 import com.example.mall.pojo.User;
 import com.example.mall.service.IUserService;
 import com.example.mall.vo.ResponseVo;
-import lombok.val;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.DigestUtils;
@@ -45,6 +44,19 @@ public class UserServiceImpl implements IUserService {  // cmd + i
         }
 
         return ResponseVo.success();
+    }
+
+    @Override
+    public ResponseVo<User> login(String username, String password) {
+        User user = userMapper.selectByUsername(username);
+        if (user == null) {
+            return ResponseVo.error(ResponseEnum.USERNAME_OR_PASSWORD_ERROR);
+        } else if (!user.getPassword().equalsIgnoreCase(
+                DigestUtils.md5DigestAsHex(password.getBytes(StandardCharsets.UTF_8)))) {
+            return ResponseVo.error(ResponseEnum.USERNAME_OR_PASSWORD_ERROR);
+        }
+        user.setPassword("");
+        return ResponseVo.success(user);
     }
 
     private static void error() {
