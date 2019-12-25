@@ -1,5 +1,8 @@
 server:
   port: 9000
+  servlet:
+    session:
+      timeout:
 
 spring:
   datasource:
@@ -16,3 +19,4 @@ mybatis:
 logging:
   pattern:
     console: "[thread] %-5level %logger{36} - %msg%n"
+

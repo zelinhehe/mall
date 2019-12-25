@@ -13,6 +13,7 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.boot.web.embedded.tomcat.TomcatServletWebServerFactory;
 
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
@@ -61,10 +62,18 @@ public class UserController {
     public ResponseVo<User> userInfo(HttpSession session) {
         log.info("/user sessionId={}", session.getId());
         User user = (User) session.getAttribute(MallConsts.CURRENT_USER);
-        if (user == null) {
-            return ResponseVo.error(ResponseEnum.NEED_LOGIN);
-        }
-
         return ResponseVo.success(user);
+    }
+
+    /**
+     * {@link TomcatServletWebServerFactory}  getSessionTimeoutInMinutes()
+     * @param session
+     * @return
+     */
+    @PostMapping("/user/logout")
+    public ResponseVo<User> loout(HttpSession session) {
+        log.info("/user/logout sessionId={}", session.getId());
+        session.removeAttribute(MallConsts.CURRENT_USER);
+        return ResponseVo.success();
     }
 }
