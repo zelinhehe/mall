@@ -2,20 +2,14 @@ package com.example.mall.pojo;
 
 import java.util.Date;
 
-/**
- * po (persistent object)
- * pojo (plan ordinary java object)
- * pojo 包含 po
- */
 public class Category {
-
     private Integer id;
 
     private Integer parentId;
 
     private String name;
 
-    private Integer status;
+    private Boolean status;
 
     private Integer sortOrder;
 
@@ -44,14 +38,14 @@ public class Category {
     }
 
     public void setName(String name) {
-        this.name = name;
+        this.name = name == null ? null : name.trim();
     }
 
-    public Integer getStatus() {
+    public Boolean getStatus() {
         return status;
     }
 
-    public void setStatus(Integer status) {
+    public void setStatus(Boolean status) {
         this.status = status;
     }
 
@@ -77,18 +71,5 @@ public class Category {
 
     public void setUpdateTime(Date updateTime) {
         this.updateTime = updateTime;
-    }
-
-    @Override
-    public String toString() {
-        return "Category{" +
-                "id=" + id +
-                ", parentId=" + parentId +
-                ", name='" + name + '\'' +
-                ", status=" + status +
-                ", sortOrder=" + sortOrder +
-                ", createTime=" + createTime +
-                ", updateTime=" + updateTime +
-                '}';
     }
 }
