@@ -12,6 +12,7 @@ import org.springframework.web.servlet.ModelAndView;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+// 定义一个拦截器：检查是否登录，是handle（controller）处理之前检查
 @Slf4j
 public class UserLoginInterceptor implements HandlerInterceptor {
 
@@ -25,12 +26,11 @@ public class UserLoginInterceptor implements HandlerInterceptor {
      */
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
-        log.info("preHandle...");
+        log.info("preHandle...{}", handler);
         User user = (User) request.getSession().getAttribute(MallConsts.CURRENT_USER);
         if (user == null) {
-            log.info("user == null");
+            log.info("user == null，session中无user，未登录");
             throw new UserLoginException();
-
 //            response.getWriter().print("error");
 //            return false;
 //            return ResponseVo.error(ResponseEnum.NEED_LOGIN);
