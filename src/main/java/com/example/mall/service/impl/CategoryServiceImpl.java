@@ -27,7 +27,7 @@ public class CategoryServiceImpl implements ICategoryService {
 //        List<CategoryVo> categoryVoList = new ArrayList<>();
         List<Category> categories = categoryMapper.selectAll();
 
-        // 查出parent_id=0
+        // 查出parent_id=0 跟类目
 //        for (Category category : categories) {
 //            if (category.getParentId().equals(ROOT_PARENT_ID)) {
 //                CategoryVo categoryVo = new CategoryVo();
@@ -38,11 +38,11 @@ public class CategoryServiceImpl implements ICategoryService {
 
         // lambda + stream
         List<CategoryVo> categoryVoList = categories.stream()
-                .filter(e -> e.getParentId().equals(ROOT_PARENT_ID))
+                .filter(e -> e.getParentId().equals(ROOT_PARENT_ID))  // 找出根类目
                 .map(e -> category2CategoryVo(e))
                 .sorted(Comparator.comparing(CategoryVo::getSortOrder).reversed())
                 .collect(Collectors.toList());
-
+        // 查找子类目
         findSubCategory(categoryVoList, categories);
 
         return ResponseVo.success(categoryVoList);
@@ -58,8 +58,11 @@ public class CategoryServiceImpl implements ICategoryService {
                     CategoryVo subCategoryVo = category2CategoryVo(category);
                     subCategoryVoList.add(subCategoryVo);
                 }
+                // 排序 by sortOrder
                 subCategoryVoList.sort(Comparator.comparing(CategoryVo::getSortOrder).reversed());
+                // 设置子类目
                 categoryVo.setSubCategories(subCategoryVoList);
+                // 递归查找子类目
                 findSubCategory(subCategoryVoList, categories);
             }
         }
