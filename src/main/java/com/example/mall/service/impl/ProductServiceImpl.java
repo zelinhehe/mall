@@ -6,6 +6,8 @@ import com.example.mall.service.ICategoryService;
 import com.example.mall.service.IProductService;
 import com.example.mall.vo.ProductVo;
 import com.example.mall.vo.ResponseVo;
+import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.PageInfo;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,13 +29,16 @@ public class ProductServiceImpl implements IProductService {
     private ProductMapper productMapper;
 
     @Override
-    public ResponseVo<List<ProductVo>> list(Integer categoryId, Integer pageNum, Integer pageSize) {
+    public ResponseVo<PageInfo> list(Integer categoryId, Integer pageNum, Integer pageSize) {
         Set<Integer> categoryIdset = new HashSet<>();
         if (categoryId != null) {
             categoryService.findSubCategoryId(categoryId, categoryIdset);
             categoryIdset.add(categoryId);
         }
-        List<ProductVo> productVoList = productMapper.selectByCategoryIdSet(categoryIdset)
+
+        PageHelper.startPage(pageNum, pageSize);
+        List<Product> productList = productMapper.selectByCategoryIdSet(categoryIdset);
+        List<ProductVo> productVoList = productList
                 .stream()
                 .map(e -> {
                     ProductVo productVo = new ProductVo();
@@ -41,6 +46,8 @@ public class ProductServiceImpl implements IProductService {
                     return productVo;
                 }).collect(Collectors.toList());
 
-        return ResponseVo.success(productVoList);
+        PageInfo pageInfo = new PageInfo<>(productList);
+        pageInfo.setList(productVoList);
+        return ResponseVo.success(pageInfo);
     }
 }
