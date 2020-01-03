@@ -1,9 +1,12 @@
 package com.example.mall.service.impl;
 
 import com.example.mall.dao.ProductMapper;
+import com.example.mall.enums.ProductStatusEnum;
+import com.example.mall.enums.ResponseEnum;
 import com.example.mall.pojo.Product;
 import com.example.mall.service.ICategoryService;
 import com.example.mall.service.IProductService;
+import com.example.mall.vo.ProductDetailVo;
 import com.example.mall.vo.ProductVo;
 import com.example.mall.vo.ResponseVo;
 import com.github.pagehelper.PageHelper;
@@ -49,5 +52,21 @@ public class ProductServiceImpl implements IProductService {
         PageInfo pageInfo = new PageInfo<>(productList);
         pageInfo.setList(productVoList);
         return ResponseVo.success(pageInfo);
+    }
+
+    @Override
+    public ResponseVo<ProductDetailVo> detail(Integer productId) {
+        Product product = productMapper.selectByPrimaryKey(productId);
+
+        if (product == null ||
+                product.getStatus().equals(ProductStatusEnum.OFF_SALE.getCode()) ||
+                product.getStatus().equals(ProductStatusEnum.DELETE.getCode())) {
+            return ResponseVo.error(ResponseEnum.PRODUCT_OFF_SALE_OR_DELETE);
+        }
+        ProductDetailVo productDetailVo = new ProductDetailVo();
+        BeanUtils.copyProperties(product, productDetailVo);
+        // 敏感数据处理
+        productDetailVo.setStock(product.getStock() > 100 ? 100 : product.getStock());
+        return ResponseVo.success(productDetailVo);
     }
 }
