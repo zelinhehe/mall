@@ -15,7 +15,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import static com.example.mall.consts.MallConsts.ROOT_PARENT_ID;
+import static com.example.mall.consts.MallConst.ROOT_PARENT_ID;
 
 @Service
 public class CategoryServiceImpl implements ICategoryService {

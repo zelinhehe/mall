@@ -1,23 +1,19 @@
 package com.example.mall.controller;
 
-import com.example.mall.consts.MallConsts;
-import com.example.mall.enums.ResponseEnum;
+import com.example.mall.consts.MallConst;
 import com.example.mall.form.UserRegisterForm;
 import com.example.mall.form.UserLoginForm;
 import com.example.mall.pojo.User;
 import com.example.mall.service.IUserService;
 import com.example.mall.vo.ResponseVo;
 import lombok.extern.slf4j.Slf4j;
-import lombok.val;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.boot.web.embedded.tomcat.TomcatServletWebServerFactory;
 
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
-import java.util.Objects;
 
 @RestController
 //@RequestMapping("/user")
@@ -40,7 +36,7 @@ public class UserController {
         ResponseVo<User> userResponseVo = userService.login(userLoginForm.getUsername(), userLoginForm.getPassword());
 
         // 设置session
-        session.setAttribute(MallConsts.CURRENT_USER, userResponseVo.getData());
+        session.setAttribute(MallConst.CURRENT_USER, userResponseVo.getData());
         log.info("/login sessionId={}", session.getId());
         return userResponseVo;
     }
@@ -49,7 +45,7 @@ public class UserController {
     @GetMapping("/user")
     public ResponseVo<User> userInfo(HttpSession session) {
         log.info("/user sessionId={}", session.getId());
-        User user = (User) session.getAttribute(MallConsts.CURRENT_USER);
+        User user = (User) session.getAttribute(MallConst.CURRENT_USER);
         return ResponseVo.success(user);
     }
 
@@ -61,7 +57,7 @@ public class UserController {
     @PostMapping("/user/logout")
     public ResponseVo<User> loout(HttpSession session) {
         log.info("/user/logout sessionId={}", session.getId());
-        session.removeAttribute(MallConsts.CURRENT_USER);
+        session.removeAttribute(MallConst.CURRENT_USER);
         return ResponseVo.success();
     }
 }
